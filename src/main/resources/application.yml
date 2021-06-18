@@ -1,2 +1,13 @@
 server:
   port: 7000
+  tomcat:
+    accesslog:
+      enabled: true
+
+management:
+  context-path: '/management'
+
+security:
+  user:
+    name: managementadmin
+    password: p4ssw0rd.
