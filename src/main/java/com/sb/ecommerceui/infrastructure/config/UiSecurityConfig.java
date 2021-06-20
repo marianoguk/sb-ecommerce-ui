@@ -7,31 +7,20 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.function.Function;
 
 @Configuration
 @EnableWebSecurity
 public class UiSecurityConfig extends WebSecurityConfigurerAdapter {
-    private static final UserDetails USER =
-            User.builder().username("user")
-                    .password("789")
-                    .roles("USER")
-                    .passwordEncoder(PasswordEncoderFactories.createDelegatingPasswordEncoder()::encode)
-                    .build();
+    private static final String[] WHITE_LIST = new String[]{
+            "/", "/home", "/actuator/**","/manage/**", "/management/**"
+    };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
+                .antMatchers(WHITE_LIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -51,22 +40,13 @@ public class UiSecurityConfig extends WebSecurityConfigurerAdapter {
                 .password(passwordEncoder().encode("789"))
                 .roles("USER")
                 .and()
-                .withUser("admin")
-                .password(passwordEncoder().encode("789"))
-                .roles("ADMIN");
+                .withUser("admin").password(passwordEncoder().encode("789")).roles("ADMIN")
+                .and()
+                .withUser("act").password(passwordEncoder().encode("act")).roles("ACTRADMIN");
     }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    /*
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        return new InMemoryUserDetailsManager(USER);
-    }
-
-     */
 }

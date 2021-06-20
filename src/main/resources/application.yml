@@ -6,8 +6,32 @@ server:
 
 management:
   context-path: '/management'
+#  security:
+#    enabled: false
+#    roles: ACTRADMIN
+  endpoints:
+    web:
+      base-path: '/actuator'
+      exposure:
+        include: health, info, metrics, env, conditions
+    enabled:
+      all: true
+  endpoint:
+    health:
+      circuitbreakers:
+        enabled: true
+      probes:
+        enabled: true # Local testing purpose
+      liveness:
+        enabled: true
+        include: livenessStateProbeIndicator
+      readiness:
+        enabled: true
+        include: readinessStateProbeIndicator
+      show-details: always
 
 security:
+  enabled: true
   user:
-    name: managementadmin
-    password: p4ssw0rd.
+    name: act
+    password: act
