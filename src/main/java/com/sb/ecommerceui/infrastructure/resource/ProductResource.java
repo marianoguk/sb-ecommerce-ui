@@ -23,17 +23,17 @@ public class ProductResource {
         this.service = service;
     }
 
-    @RequestMapping("/login")
+    @RequestMapping("login")
     public String login() {
         return "login";
     }
 
-    @GetMapping(value = {"/home", "/"})
+    @GetMapping(value = "/home")
     public String home() {
         return "home";
     }
 
-    @GetMapping(value = {"/hello"})
+    @GetMapping(value = "/hello")
     public String hello() {
         return "hello";
     }
